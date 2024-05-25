@@ -11,12 +11,17 @@ def read_portfolio(filename):
     with open(filename, "r") as f:
         rows = csv.reader(f)
         headers = next(rows)
-        for row in rows:
-            holding = {}
-            holding["name"] = row[0]
-            holding["shares"] = int(row[1])
-            holding["price"] = float(row[2])
-            portfolio.append(holding)
+        for row_no, row in enumerate(rows, start=1):
+            try:
+                record = dict(zip(headers, row))
+                holding = {
+                    "name": record["name"],
+                    "shares": int(record["shares"]),
+                    "price": float(record["price"]),
+                }
+                portfolio.append(holding)
+            except ValueError:
+                print(f"Row {row_no}: Couldn't convert: {row}")
     return portfolio
 
 
